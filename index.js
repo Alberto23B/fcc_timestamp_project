@@ -25,13 +25,15 @@ app.get("/api/:date", function (req, res) {
   if (inputDate.match(regexUtc)) {
     const utcDate = new Date(inputDate);
     const unixDate = utcDate.getTime();
-    console.log(typeof unixDate)
     const utcMsg = utcDate.toUTCString();
     res.json({"unix" : unixDate, "utc" : `${utcMsg}`})
   } else if (inputDate.match(regexUnix)) {
-    res.end()
+    const unixDate = Number(inputDate)
+    const utcDate = new Date(unixDate);
+    const utcMsg = utcDate.toUTCString();
+    res.json({"unix" : unixDate, "utc" : `${utcMsg}`})
   } else {
-    res.status(400).end("Bad request");
+    // res.json({ error : "Invalid Date" });
   }
 })
 
