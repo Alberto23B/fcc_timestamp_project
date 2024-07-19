@@ -18,6 +18,22 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/api/:date", function (req, res) {
+  const inputDate = req.params.date
+  const regexUtc = /^[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2}/;
+  const regexUnix = /[0-9]{1,13}/;
+  if (inputDate.match(regexUtc)) {
+    const utcDate = new Date(inputDate);
+    const unixDate = utcDate.getTime();
+    console.log(typeof unixDate)
+    const utcMsg = utcDate.toUTCString();
+    res.json({"unix" : unixDate, "utc" : `${utcMsg}`})
+  } else if (inputDate.match(regexUnix)) {
+    res.end()
+  } else {
+    res.status(400).end("Bad request");
+  }
+})
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
@@ -26,7 +42,8 @@ app.get("/api/hello", function (req, res) {
 
 
 
+
 // Listen on port set in environment variable or default to 3000
-var listener = app.listen(process.env.PORT || 3000, function () {
+var listener = app.listen(process.env.PORT || 5500, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
